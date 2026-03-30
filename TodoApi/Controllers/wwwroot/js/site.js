@@ -46,6 +46,8 @@ function displayEditForm(id) {
     document.getElementById('edit-name').value = item.name;
     document.getElementById('edit-id').value = item.id;
     document.getElementById('edit-isComplete').checked = item.isComplete;
+    // populates date input, splits the date string to get YYYY-MM-DD format
+    document.getElementById('edit-completionDate').value = item.completionDate ? item.completionDate.split('T')[0] : '';
     document.getElementById('editForm').style.display = 'block';
 }
 
@@ -54,6 +56,7 @@ function updateItem() {
     const item = {
         id: parseInt(itemId, 10),
         isComplete: document.getElementById('edit-isComplete').checked,
+        completionDate: document.getElementById('edit-completionDate').value || null, // grabs the date from edit form
         name: document.getElementById('edit-name').value.trim()
     };
 
@@ -110,14 +113,21 @@ function _displayItems(data) {
         let td1 = tr.insertCell(0);
         td1.appendChild(isCompleteCheckbox);
 
-        let td2 = tr.insertCell(1);
+        // insert the date cell
+        let tdDate = tr.insertCell(1);
+        // formats the date to a more readable format, if completionDate is null, it displays 'N/A'
+        let dateValue = item.completionDate ? new Date(item.completionDate).toLocaleDateString() : 'N/A';
+        let dateTextNode = document.createTextNode(dateValue);
+        tdDate.appendChild(dateTextNode);
+
+        let td2 = tr.insertCell(2);
         let textNode = document.createTextNode(item.name);
         td2.appendChild(textNode);
 
-        let td3 = tr.insertCell(2);
+        let td3 = tr.insertCell(3);
         td3.appendChild(editButton);
 
-        let td4 = tr.insertCell(3);
+        let td4 = tr.insertCell(4);
         td4.appendChild(deleteButton);
     });
 
